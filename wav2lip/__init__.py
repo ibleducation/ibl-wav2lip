@@ -1,10 +1,18 @@
+import os
 from .inference import main
-
+from .download import download_checkpoint_file, download_pretrained_model
 from argparse import Namespace
 
 import logging
 from pathlib import Path
+
+try:
+    from django.conf import settings
+except ImportError:
+    settings = None
+
 logger = logging.getLogger(__name__)
+
 
 BASE_DIR = Path.cwd()
 
@@ -77,6 +85,15 @@ class Inference:
         self.check_required_files(checkpoint_path=checkpoint_path, )
 
     def check_required_files(self, checkpoint_path):
+        if settings:
+            auto_download_models = settings.AI_PLUS_VIDEO_APP_AUTO_DOWNLOAD_SADTALKER_MODEL
+        else:
+            auto_download_models = os.getenv("AI_PLUS_VIDEO_APP_AUTO_DOWNLOAD_SADTALKER_MODEL") in ["True", "true", True]
+
+        if (not Path(checkpoint_path).is_file()) and auto_download_models:
+            # download checkpoint and pretrained model if they do not exist.
+            download_pretrained_model()
+            download_checkpoint_file()
         if not Path(checkpoint_path).is_file():
             raise FileNotFoundError(f'Checkpoint file not found: {checkpoint_path}')
     
