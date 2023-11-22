@@ -86,9 +86,9 @@ class Inference:
 
     def check_required_files(self, checkpoint_path):
         if settings:
-            auto_download_models = settings.AI_PLUS_VIDEO_APP_AUTO_DOWNLOAD_SADTALKER_MODEL
+            auto_download_models = settings.AI_PLUS_VIDEO_APP_AUTO_DOWNLOAD_WAV2LIP_MODEL
         else:
-            auto_download_models = os.getenv("AI_PLUS_VIDEO_APP_AUTO_DOWNLOAD_SADTALKER_MODEL") in ["True", "true", True]
+            auto_download_models = os.getenv("AI_PLUS_VIDEO_APP_AUTO_DOWNLOAD_WAV2LIP_MODEL") in ["True", "true", True]
 
         if (not Path(checkpoint_path).is_file()) and auto_download_models:
             # download checkpoint and pretrained model if they do not exist.
